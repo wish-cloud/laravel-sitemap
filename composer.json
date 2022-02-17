@@ -1,0 +1,49 @@
+{
+    "name": "wish-cloud/laravel-sitemap",
+    "description": "sitemap generator package for Laravel.",
+    "keywords": [
+        "laravel-sitemap",
+        "laravel",
+        "php",
+        "sitemap",
+        "generator",
+        "xml",
+        "google-news"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "James",
+            "email": "aichiaishuishentihao@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/wish-cloud/laravel-sitemap/issues",
+        "source": "https://github.com/wish-cloud/laravel-sitemap"
+    },
+    "require": {
+        "php": "^7.3|^8.0",
+        "illuminate/support": "^8.0|^9.0",
+        "illuminate/filesystem": "^8.0|^9.0"
+    },
+    "require-dev": {
+        "laravel/framework": "^8.0|^9.0",
+        "phpunit/phpunit": "^8.5|^9.0",
+        "orchestra/testbench-core": "^6.0|^7.0",
+        "php-coveralls/php-coveralls": "^2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "WishCloud\\LaravelSitemap\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "WishCloud\\LaravelSitemap\\SitemapServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

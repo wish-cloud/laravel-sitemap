@@ -1,0 +1,22 @@
+.directory
+.DS_Store
+Thumbs.db
+*.sh
+.idea
+
+# composer
+composer.phar
+composer.lock
+/vendor
+
+# cs
+.php_cs
+/.php_cs.cache
+
+# phpunit
+/.phpunit.result.cache
+
+# test runtime files
+/tests/tmp
+/tests/sitema*.xml
+/tests/sitema*.xml.gz
