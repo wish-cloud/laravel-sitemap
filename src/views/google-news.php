@@ -1,31 +1,31 @@
-<?= '<'.'?'.'xml version="1.0" encoding="UTF-8"?>'."\n" ?>
-<?php if (null != $style) {
-    echo '<'.'?'.'xml-stylesheet href="'.$style.'" type="text/xsl"?>'."\n";
+<?php echo '<?xml version="1.0" encoding="UTF-8"?>'."\n"; ?>
+<?php if ($style !== null) {
+    echo '<?xml-stylesheet href="'.$style.'" type="text/xsl"?>'."\n";
 } ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-<?php foreach ($items as $item) : ?>
-	<url>
-	<loc><?= $item['loc'] ?></loc>
-	<?php
+<?php foreach ($items as $item) { ?>
+    <url>
+    <loc><?php echo $item['loc']; ?></loc>
+    <?php
         if ($item['lastmod'] !== null) {
             echo '<lastmod>'.date('Y-m-d\TH:i:sP', strtotime($item['lastmod'])).'</lastmod>'."\n";
         }
     ?>
-	<?php
+    <?php
         if (! empty($item['alternates'])) {
             foreach ($item['alternates'] as $alternate) {
                 echo '<xhtml:link rel="alternate" media="'.$alternate['media'].'" href="'.$alternate['url'].'" />'."\n";
             }
         }
     ?>
-	<news:news>
-		<news:publication>
-		<news:name><?= $item['googlenews']['sitename'] ?></news:name>
-		<news:language><?= $item['googlenews']['language']  ?></news:language>
-		</news:publication>
-		<news:publication_date><?= date('Y-m-d\TH:i:sP', strtotime($item['googlenews']['publication_date'])) ?></news:publication_date>
-		<news:title><?= $item['title'] ?></news:title>
-	<?php
+    <news:news>
+        <news:publication>
+        <news:name><?php echo $item['googlenews']['sitename']; ?></news:name>
+        <news:language><?php echo $item['googlenews']['language'];  ?></news:language>
+        </news:publication>
+        <news:publication_date><?php echo date('Y-m-d\TH:i:sP', strtotime($item['googlenews']['publication_date'])); ?></news:publication_date>
+        <news:title><?php echo $item['title']; ?></news:title>
+    <?php
     if (isset($item['googlenews']['access'])) {
         echo "\t\t".'<news:access>'.$item['googlenews']['access'].'</news:access>'."\n";
     }
@@ -42,7 +42,7 @@
         echo "\t\t".'<news:stock_tickers>'.implode(',', $item['googlenews']['stock_tickers']).'</news:stock_tickers>'."\n";
     }
     ?>
-	</news:news>
-	</url>
-<?php endforeach; ?>
+    </news:news>
+    </url>
+<?php } ?>
 </urlset>

@@ -6,20 +6,15 @@ namespace WishCloud\LaravelSitemap;
  * Sitemap class for laravel-sitemap package.
  *
  * @author James <aichiaishuishentihao@gmail.com>
- *
- * @version 9.0.0
- *
  * @link https://github.com/wish-cloud/laravel-sitemap
- *
  * @license http://opensource.org/licenses/mit-license.php MIT License
  */
 
-use Illuminate\Filesystem\Filesystem as Filesystem;
-use Illuminate\Contracts\View\Factory as ViewFactory;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
-use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactory;
-use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Filesystem\Filesystem;
 
 class Sitemap
 {
@@ -28,14 +23,14 @@ class Sitemap
      *
      * @var Model
      */
-    public $model = null;
+    protected $model = null;
 
     /**
      * CacheRepository instance.
      *
      * @var CacheRepository
      */
-    public $cache = null;
+    protected $cache = null;
 
     /**
      * ConfigRepository instance.
@@ -94,11 +89,11 @@ class Sitemap
     {
         $this->model->setUseCache($useCache);
 
-        if (null !== $key) {
+        if ($key !== null) {
             $this->model->setCacheKey($key);
         }
 
-        if (null !== $duration) {
+        if ($duration !== null) {
             $this->model->setCacheDuration($duration);
         }
     }
@@ -110,10 +105,8 @@ class Sitemap
      */
     public function isCached()
     {
-        if ($this->model->getUseCache()) {
-            if ($this->cache->has($this->model->getCacheKey())) {
-                return true;
-            }
+        if ($this->model->getUseCache() && $this->cache->has($this->model->getCacheKey())) {
+            return true;
         }
 
         return false;
@@ -138,16 +131,16 @@ class Sitemap
     public function add($loc, $lastmod = null, $priority = null, $freq = null, $images = [], $title = null, $translations = [], $videos = [], $googlenews = [], $alternates = [])
     {
         $params = [
-            'loc'           => $loc,
-            'lastmod'       => $lastmod,
-            'priority'      => $priority,
-            'freq'          => $freq,
-            'images'        => $images,
-            'title'         => $title,
-            'translations'  => $translations,
-            'videos'        => $videos,
-            'googlenews'    => $googlenews,
-            'alternates'    => $alternates,
+            'loc' => $loc,
+            'lastmod' => $lastmod,
+            'priority' => $priority,
+            'freq' => $freq,
+            'images' => $images,
+            'title' => $title,
+            'translations' => $translations,
+            'videos' => $videos,
+            'googlenews' => $googlenews,
+            'alternates' => $alternates,
         ];
 
         $this->addItem($params);
@@ -178,102 +171,67 @@ class Sitemap
         }
 
         // set default values
-        if (!isset($loc)) {
-            $loc = '/';
-        }
-        if (!isset($lastmod)) {
-            $lastmod = null;
-        }
-        if (!isset($priority)) {
-            $priority = null;
-        }
-        if (!isset($freq)) {
-            $freq = null;
-        }
-        if (!isset($title)) {
-            $title = null;
-        }
-        if (!isset($images)) {
-            $images = [];
-        }
-        if (!isset($translations)) {
-            $translations = [];
-        }
-        if (!isset($alternates)) {
-            $alternates = [];
-        }
-        if (!isset($videos)) {
-            $videos = [];
-        }
-        if (!isset($googlenews)) {
-            $googlenews = [];
-        }
+        $loc = $loc ?? '/';
+        $title = $title ?? '';
+
+        $images = $images ?? [];
+        $translations = $translations ?? [];
+        $alternates = $alternates ?? [];
+        $videos = $videos ?? [];
+        $googlenews = $googlenews ?? [];
 
         // escaping
         if ($this->model->getEscaping()) {
             $loc = htmlentities($loc, ENT_XML1);
+            $title = htmlentities($title, ENT_XML1);
 
-            if ($title != null) {
-                htmlentities($title, ENT_XML1);
-            }
-
-            if ($images) {
-                foreach ($images as $k => $image) {
-                    foreach ($image as $key => $value) {
-                        $images[$k][$key] = htmlentities($value, ENT_XML1);
-                    }
+            foreach ($images as $k => $image) {
+                foreach ($image as $key => $value) {
+                    $images[$k][$key] = htmlentities($value, ENT_XML1);
                 }
             }
 
-            if ($translations) {
-                foreach ($translations as $k => $translation) {
-                    foreach ($translation as $key => $value) {
-                        $translations[$k][$key] = htmlentities($value, ENT_XML1);
-                    }
+            foreach ($translations as $k => $translation) {
+                foreach ($translation as $key => $value) {
+                    $translations[$k][$key] = htmlentities($value, ENT_XML1);
                 }
             }
 
-            if ($alternates) {
-                foreach ($alternates as $k => $alternate) {
-                    foreach ($alternate as $key => $value) {
-                        $alternates[$k][$key] = htmlentities($value, ENT_XML1);
-                    }
+            foreach ($alternates as $k => $alternate) {
+                foreach ($alternate as $key => $value) {
+                    $alternates[$k][$key] = htmlentities($value, ENT_XML1);
                 }
             }
 
-            if ($videos) {
-                foreach ($videos as $k => $video) {
-                    if (!empty($video['title'])) {
-                        $videos[$k]['title'] = htmlentities($video['title'], ENT_XML1);
-                    }
-                    if (!empty($video['description'])) {
-                        $videos[$k]['description'] = htmlentities($video['description'], ENT_XML1);
-                    }
+            foreach ($videos as $k => $video) {
+                if (! empty($video['title'])) {
+                    $videos[$k]['title'] = htmlentities($video['title'], ENT_XML1);
+                }
+                if (! empty($video['description'])) {
+                    $videos[$k]['description'] = htmlentities($video['description'], ENT_XML1);
                 }
             }
 
-            if ($googlenews) {
-                if (isset($googlenews['sitename'])) {
-                    $googlenews['sitename'] = htmlentities($googlenews['sitename'], ENT_XML1);
-                }
+            if (isset($googlenews['sitename'])) {
+                $googlenews['sitename'] = htmlentities($googlenews['sitename'], ENT_XML1);
             }
         }
 
-        $googlenews['sitename'] = isset($googlenews['sitename']) ? $googlenews['sitename'] : '';
-        $googlenews['language'] = isset($googlenews['language']) ? $googlenews['language'] : 'en';
-        $googlenews['publication_date'] = isset($googlenews['publication_date']) ? $googlenews['publication_date'] : date('Y-m-d H:i:s');
+        $googlenews['sitename'] = $googlenews['sitename'] ?? '';
+        $googlenews['language'] = $googlenews['language'] ?? 'en';
+        $googlenews['publication_date'] = $googlenews['publication_date'] ?? date('Y-m-d H:i:s');
 
         $this->model->setItems([
-            'loc'          => $loc,
-            'lastmod'      => $lastmod,
-            'priority'     => $priority,
-            'freq'         => $freq,
-            'images'       => $images,
-            'title'        => $title,
+            'loc' => $loc,
+            'lastmod' => $lastmod,
+            'priority' => $priority,
+            'freq' => $freq,
+            'images' => $images,
+            'title' => $title,
             'translations' => $translations,
-            'videos'       => $videos,
-            'googlenews'   => $googlenews,
-            'alternates'   => $alternates,
+            'videos' => $videos,
+            'googlenews' => $googlenews,
+            'alternates' => $alternates,
         ]);
     }
 
@@ -288,7 +246,7 @@ class Sitemap
     public function addSitemap($loc, $lastmod = null)
     {
         $this->model->setSitemaps([
-            'loc'     => $loc,
+            'loc' => $loc,
             'lastmod' => $lastmod,
         ]);
     }
@@ -319,9 +277,9 @@ class Sitemap
         // limit size of sitemap
         if ($this->model->getMaxSize() > 0 && count($this->model->getItems()) > $this->model->getMaxSize()) {
             $this->model->limitSize($this->model->getMaxSize());
-        } elseif ('google-news' == $format && count($this->model->getItems()) > 1000) {
+        } elseif ($format === 'google-news' && count($this->model->getItems()) > 1000) {
             $this->model->limitSize(1000);
-        } elseif ('google-news' != $format && count($this->model->getItems()) > 50000) {
+        } elseif ($format !== 'google-news' && count($this->model->getItems()) > 50000) {
             $this->model->limitSize();
         }
 
@@ -342,27 +300,27 @@ class Sitemap
     {
         // check if caching is enabled, there is a cached content and its duration isn't expired
         if ($this->isCached()) {
-            ('sitemapindex' == $format) ? $this->model->resetSitemaps($this->cache->get($this->model->getCacheKey())) : $this->model->resetItems($this->cache->get($this->model->getCacheKey()));
+            $format === 'sitemapindex' ? $this->model->resetSitemaps($this->cache->get($this->model->getCacheKey())) : $this->model->resetItems($this->cache->get($this->model->getCacheKey()));
         } elseif ($this->model->getUseCache()) {
-            ('sitemapindex' == $format) ? $this->cache->put($this->model->getCacheKey(), $this->model->getSitemaps(), $this->model->getCacheDuration()) : $this->cache->put($this->model->getCacheKey(), $this->model->getItems(), $this->model->getCacheDuration());
+            $format === 'sitemapindex' ? $this->cache->put($this->model->getCacheKey(), $this->model->getSitemaps(), $this->model->getCacheDuration()) : $this->cache->put($this->model->getCacheKey(), $this->model->getItems(), $this->model->getCacheDuration());
         }
 
-        if (!$this->model->getLink()) {
+        if (! $this->model->getLink()) {
             $this->model->setLink($this->configRepository->get('app.url'));
         }
 
-        if (!$this->model->getTitle()) {
+        if (! $this->model->getTitle()) {
             $this->model->setTitle('Sitemap for ' . $this->model->getLink());
         }
 
         $channel = [
             'title' => $this->model->getTitle(),
-            'link'  => $this->model->getLink(),
+            'link' => $this->model->getLink(),
         ];
 
         // check if styles are enabled
         if ($this->model->getUseStyles()) {
-            if (null != $this->model->getSloc() && file_exists(public_path($this->model->getSloc() . $format . '.xsl'))) {
+            if ($this->model->getSloc() !== null && file_exists(public_path($this->model->getSloc() . $format . '.xsl'))) {
                 // use style from your custom location
                 $style = $this->model->getSloc() . $format . '.xsl';
             } else {
@@ -406,10 +364,10 @@ class Sitemap
         $this->model->setUseCache(false);
 
         // use correct file extension
-        (in_array($format, ['txt', 'html'], true)) ? $fe = $format : $fe = 'xml';
+        in_array($format, ['txt', 'html'], true) ? $fe = $format : $fe = 'xml';
 
-        if (true == $this->model->getUseGzip()) {
-            $fe = $fe . ".gz";
+        if ($this->model->getUseGzip() === true) {
+            $fe .= '.gz';
         }
 
         // use custom size limit for sitemaps
@@ -428,7 +386,7 @@ class Sitemap
                     $this->store($format, $filename . '-' . $key, $path, $style);
 
                     // add sitemap to sitemapindex
-                    if ($path != null) {
+                    if ($path !== null) {
                         // if using custom path generate relative urls for sitemaps in the sitemapindex
                         $this->addSitemap($filename . '-' . $key . '.' . $fe);
                     } else {
@@ -438,13 +396,12 @@ class Sitemap
                 }
 
                 $data = $this->generate('sitemapindex', $style);
-                dd($data);
             }
-        } elseif (('google-news' != $format && count($this->model->getItems()) > 50000) || ($format == 'google-news' && count($this->model->getItems()) > 1000)) {
-            ('google-news' != $format) ? $max = 50000 : $max = 1000;
+        } elseif (($format !== 'google-news' && count($this->model->getItems()) > 50000) || ($format === 'google-news' && count($this->model->getItems()) > 1000)) {
+            $format !== 'google-news' ? $max = 50000 : $max = 1000;
 
             // check if limiting size of items array is enabled
-            if (!$this->model->getUseLimitSize()) {
+            if (! $this->model->getUseLimitSize()) {
                 // use sitemapindex and generate partial sitemaps
                 foreach (array_chunk($this->model->getItems(), $max) as $key => $item) {
                     // reset current items
@@ -454,7 +411,7 @@ class Sitemap
                     $this->store($format, $filename . '-' . $key, $path, $style);
 
                     // add sitemap to sitemapindex
-                    if (null != $path) {
+                    if ($path !== null) {
                         // if using custom path generate relative urls for sitemaps in the sitemapindex
                         $this->addSitemap($filename . '-' . $key . '.' . $fe);
                     } else {
@@ -474,20 +431,20 @@ class Sitemap
         }
 
         // clear memory
-        if ('sitemapindex' == $format) {
+        if ($format === 'sitemapindex') {
             $this->model->resetSitemaps();
         }
 
         $this->model->resetItems();
 
         // if custom path
-        if (null == $path) {
+        if ($path === null) {
             $file = public_path() . DIRECTORY_SEPARATOR . $filename . '.' . $fe;
         } else {
             $file = $path . DIRECTORY_SEPARATOR . $filename . '.' . $fe;
         }
 
-        if (true == $this->model->getUseGzip()) {
+        if ($this->model->getUseGzip() === true) {
             // write file (gzip compressed)
             $this->file->put($file, gzencode($data['content'], 9));
         } else {
