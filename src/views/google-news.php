@@ -21,7 +21,7 @@
     <news:news>
         <news:publication>
         <news:name><?php echo $item['googlenews']['sitename']; ?></news:name>
-        <news:language><?php echo $item['googlenews']['language'];  ?></news:language>
+        <news:language><?php echo $item['googlenews']['language']; ?></news:language>
         </news:publication>
         <news:publication_date><?php echo date('Y-m-d\TH:i:sP', strtotime($item['googlenews']['publication_date'])); ?></news:publication_date>
         <news:title><?php echo $item['title']; ?></news:title>

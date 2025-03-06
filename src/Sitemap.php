@@ -6,7 +6,9 @@ namespace WishCloud\LaravelSitemap;
  * Sitemap class for laravel-sitemap package.
  *
  * @author James <aichiaishuishentihao@gmail.com>
+ *
  * @link https://github.com/wish-cloud/laravel-sitemap
+ *
  * @license http://opensource.org/licenses/mit-license.php MIT License
  */
 
@@ -64,7 +66,7 @@ class Sitemap
      * Using constructor we populate our model from configuration file
      * and loading dependencies.
      *
-     * @param array $config
+     * @param  array  $config
      */
     public function __construct()
     {
@@ -81,9 +83,9 @@ class Sitemap
     /**
      * Set cache options.
      *
-     * @param string              $key
-     * @param Carbon|Datetime|int $duration
-     * @param bool                $useCache
+     * @param  string  $key
+     * @param  Carbon|Datetime|int  $duration
+     * @param  bool  $useCache
      */
     public function setCache($key = null, $duration = null, $useCache = true)
     {
@@ -115,17 +117,16 @@ class Sitemap
     /**
      * Add new sitemap item to $items array.
      *
-     * @param string $loc
-     * @param string $lastmod
-     * @param string $priority
-     * @param string $freq
-     * @param array  $images
-     * @param string $title
-     * @param array  $translations
-     * @param array  $videos
-     * @param array  $googlenews
-     * @param array  $alternates
-     *
+     * @param  string  $loc
+     * @param  string  $lastmod
+     * @param  string  $priority
+     * @param  string  $freq
+     * @param  array  $images
+     * @param  string  $title
+     * @param  array  $translations
+     * @param  array  $videos
+     * @param  array  $googlenews
+     * @param  array  $alternates
      * @return void
      */
     public function add($loc, $lastmod = null, $priority = null, $freq = null, $images = [], $title = null, $translations = [], $videos = [], $googlenews = [], $alternates = [])
@@ -149,8 +150,7 @@ class Sitemap
     /**
      * Add new sitemap one or multiple items to $items array.
      *
-     * @param array $params
-     *
+     * @param  array  $params
      * @return void
      */
     public function addItem($params = [])
@@ -238,9 +238,8 @@ class Sitemap
     /**
      * Add new sitemap to $sitemaps array.
      *
-     * @param string $loc
-     * @param string $lastmod
-     *
+     * @param  string  $loc
+     * @param  string  $lastmod
      * @return void
      */
     public function addSitemap($loc, $lastmod = null)
@@ -254,9 +253,8 @@ class Sitemap
     /**
      * Add new sitemap to $sitemaps array.
      *
-     * @param string $loc
-     * @param string $lastmod
-     *
+     * @param  string  $loc
+     * @param  string  $lastmod
      * @return void
      */
     public function resetSitemaps($sitemaps = [])
@@ -267,9 +265,8 @@ class Sitemap
     /**
      * Returns document with all sitemap items from $items array.
      *
-     * @param string $format (options: xml, html, txt, ror-rss, ror-rdf, google-news)
-     * @param string $style  (path to custom xls style like '/styles/xsl/xml-sitemap.xsl')
-     *
+     * @param  string  $format  (options: xml, html, txt, ror-rss, ror-rdf, google-news)
+     * @param  string  $style  (path to custom xls style like '/styles/xsl/xml-sitemap.xsl')
      * @return View
      */
     public function render($format = 'xml', $style = null)
@@ -291,9 +288,8 @@ class Sitemap
     /**
      * Generates document with all sitemap items from $items array.
      *
-     * @param string $format (options: xml, html, txt, ror-rss, ror-rdf, sitemapindex, google-news)
-     * @param string $style  (path to custom xls style like '/styles/xsl/xml-sitemap.xsl')
-     *
+     * @param  string  $format  (options: xml, html, txt, ror-rss, ror-rdf, sitemapindex, google-news)
+     * @param  string  $style  (path to custom xls style like '/styles/xsl/xml-sitemap.xsl')
      * @return array
      */
     public function generate($format = 'xml', $style = null)
@@ -310,7 +306,7 @@ class Sitemap
         }
 
         if (! $this->model->getTitle()) {
-            $this->model->setTitle('Sitemap for ' . $this->model->getLink());
+            $this->model->setTitle('Sitemap for '.$this->model->getLink());
         }
 
         $channel = [
@@ -320,9 +316,9 @@ class Sitemap
 
         // check if styles are enabled
         if ($this->model->getUseStyles()) {
-            if ($this->model->getSloc() !== null && file_exists(public_path($this->model->getSloc() . $format . '.xsl'))) {
+            if ($this->model->getSloc() !== null && file_exists(public_path($this->model->getSloc().$format.'.xsl'))) {
                 // use style from your custom location
-                $style = $this->model->getSloc() . $format . '.xsl';
+                $style = $this->model->getSloc().$format.'.xsl';
             } else {
                 // don't use style
                 $style = null;
@@ -344,18 +340,17 @@ class Sitemap
             case 'sitemapindex':
                 return ['content' => $this->view->make('sitemap::sitemapindex', ['sitemaps' => $this->model->getSitemaps(), 'style' => $style])->render(), 'headers' => ['Content-type' => 'text/xml; charset=utf-8']];
             default:
-                return ['content' => $this->view->make('sitemap::' . $format, ['items' => $this->model->getItems(), 'style' => $style])->render(), 'headers' => ['Content-type' => 'text/xml; charset=utf-8']];
+                return ['content' => $this->view->make('sitemap::'.$format, ['items' => $this->model->getItems(), 'style' => $style])->render(), 'headers' => ['Content-type' => 'text/xml; charset=utf-8']];
         }
     }
 
     /**
      * Generate sitemap and store it to a file.
      *
-     * @param string $format   (options: xml, html, txt, ror-rss, ror-rdf, sitemapindex, google-news)
-     * @param string $filename (without file extension, may be a path like 'sitemaps/sitemap1' but must exist)
-     * @param string $path     (path to store sitemap like '/www/site/public')
-     * @param string $style    (path to custom xls style like '/styles/xsl/xml-sitemap.xsl')
-     *
+     * @param  string  $format  (options: xml, html, txt, ror-rss, ror-rdf, sitemapindex, google-news)
+     * @param  string  $filename  (without file extension, may be a path like 'sitemaps/sitemap1' but must exist)
+     * @param  string  $path  (path to store sitemap like '/www/site/public')
+     * @param  string  $style  (path to custom xls style like '/styles/xsl/xml-sitemap.xsl')
      * @return void
      */
     public function store($format = 'xml', $filename = 'sitemap', $path = null, $style = null)
@@ -383,15 +378,15 @@ class Sitemap
                     $this->model->resetItems($item);
 
                     // generate new partial sitemap
-                    $this->store($format, $filename . '-' . $key, $path, $style);
+                    $this->store($format, $filename.'-'.$key, $path, $style);
 
                     // add sitemap to sitemapindex
                     if ($path !== null) {
                         // if using custom path generate relative urls for sitemaps in the sitemapindex
-                        $this->addSitemap($filename . '-' . $key . '.' . $fe);
+                        $this->addSitemap($filename.'-'.$key.'.'.$fe);
                     } else {
                         // else generate full urls based on app's domain
-                        $this->addSitemap(url($filename . '-' . $key . '.' . $fe));
+                        $this->addSitemap(url($filename.'-'.$key.'.'.$fe));
                     }
                 }
 
@@ -408,15 +403,15 @@ class Sitemap
                     $this->model->resetItems($item);
 
                     // generate new partial sitemap
-                    $this->store($format, $filename . '-' . $key, $path, $style);
+                    $this->store($format, $filename.'-'.$key, $path, $style);
 
                     // add sitemap to sitemapindex
                     if ($path !== null) {
                         // if using custom path generate relative urls for sitemaps in the sitemapindex
-                        $this->addSitemap($filename . '-' . $key . '.' . $fe);
+                        $this->addSitemap($filename.'-'.$key.'.'.$fe);
                     } else {
                         // else generate full urls based on app's domain
-                        $this->addSitemap(url($filename . '-' . $key . '.' . $fe));
+                        $this->addSitemap(url($filename.'-'.$key.'.'.$fe));
                     }
                 }
 
@@ -439,9 +434,9 @@ class Sitemap
 
         // if custom path
         if ($path === null) {
-            $file = public_path() . DIRECTORY_SEPARATOR . $filename . '.' . $fe;
+            $file = public_path().DIRECTORY_SEPARATOR.$filename.'.'.$fe;
         } else {
-            $file = $path . DIRECTORY_SEPARATOR . $filename . '.' . $fe;
+            $file = $path.DIRECTORY_SEPARATOR.$filename.'.'.$fe;
         }
 
         if ($this->model->getUseGzip() === true) {

@@ -94,8 +94,6 @@ class Model
 
     /**
      * Populating model variables from configuation file.
-     *
-     * @param array $config
      */
     public function __construct(array $config)
     {
@@ -224,7 +222,7 @@ class Model
     /**
      * Returns $maxSize value.
      *
-     * @param int $maxSize
+     * @param  int  $maxSize
      */
     public function getMaxSize()
     {
@@ -234,7 +232,7 @@ class Model
     /**
      * Returns $useGzip value.
      *
-     * @param bool $useGzip
+     * @param  bool  $useGzip
      */
     public function getUseGzip()
     {
@@ -244,7 +242,7 @@ class Model
     /**
      * Sets $escaping value.
      *
-     * @param bool $escaping
+     * @param  bool  $escaping
      */
     public function setEscaping($b)
     {
@@ -254,7 +252,7 @@ class Model
     /**
      * Adds item to $items array.
      *
-     * @param array $item
+     * @param  array  $item
      */
     public function setItems($items)
     {
@@ -264,7 +262,7 @@ class Model
     /**
      * Adds sitemap to $sitemaps array.
      *
-     * @param array $sitemap
+     * @param  array  $sitemap
      */
     public function setSitemaps($sitemap)
     {
@@ -274,7 +272,7 @@ class Model
     /**
      * Sets $title value.
      *
-     * @param string $title
+     * @param  string  $title
      */
     public function setTitle($title)
     {
@@ -284,7 +282,7 @@ class Model
     /**
      * Sets $link value.
      *
-     * @param string $link
+     * @param  string  $link
      */
     public function setLink($link)
     {
@@ -294,7 +292,7 @@ class Model
     /**
      * Sets $useStyles value.
      *
-     * @param bool $useStyles
+     * @param  bool  $useStyles
      */
     public function setUseStyles($useStyles)
     {
@@ -304,7 +302,7 @@ class Model
     /**
      * Sets $sloc value.
      *
-     * @param string $sloc
+     * @param  string  $sloc
      */
     public function setSloc($sloc)
     {
@@ -314,7 +312,7 @@ class Model
     /**
      * Sets $useLimitSize value.
      *
-     * @param bool $useLimitSize
+     * @param  bool  $useLimitSize
      */
     public function setUseLimitSize($useLimitSize)
     {
@@ -324,7 +322,7 @@ class Model
     /**
      * Sets $maxSize value.
      *
-     * @param int $maxSize
+     * @param  int  $maxSize
      */
     public function setMaxSize($maxSize)
     {
@@ -334,7 +332,7 @@ class Model
     /**
      * Sets $useGzip value.
      *
-     * @param bool $useGzip
+     * @param  bool  $useGzip
      */
     public function setUseGzip($useGzip = true)
     {
@@ -352,7 +350,7 @@ class Model
     /**
      * Reset $items array.
      *
-     * @param array $items
+     * @param  array  $items
      */
     public function resetItems($items = [])
     {
@@ -362,7 +360,7 @@ class Model
     /**
      * Reset $sitemaps array.
      *
-     * @param array $sitemaps
+     * @param  array  $sitemaps
      */
     public function resetSitemaps($sitemaps = [])
     {
@@ -372,7 +370,7 @@ class Model
     /**
      * Set use cache value.
      *
-     * @param bool $useCache
+     * @param  bool  $useCache
      */
     public function setUseCache($useCache = true)
     {
@@ -382,7 +380,7 @@ class Model
     /**
      * Set cache key value.
      *
-     * @param string $cacheKey
+     * @param  string  $cacheKey
      */
     public function setCacheKey($cacheKey)
     {
@@ -392,7 +390,7 @@ class Model
     /**
      * Set cache duration value.
      *
-     * @param Carbon|Datetime|int $cacheDuration
+     * @param  Carbon|Datetime|int  $cacheDuration
      */
     public function setCacheDuration($cacheDuration)
     {
